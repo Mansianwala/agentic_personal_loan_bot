@@ -74,7 +74,5 @@ Limitations & next steps
 - Persist guest profiles to `guests.json` or a simple DB if you want guest accounts to be re-usable.
 - Improve UI/UX: show sanction PDF link after approval, add file download, progress indicators, and conversational tone.
 
-License & attribution
-- This is a small demo created as an exercise. No license file is included; add one if needed.
 
 ---
