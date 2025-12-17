@@ -1,0 +1,15 @@
+# Ignore generated PDFs
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# OS files
+.DS_Store
+Thumbs.db
