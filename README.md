@@ -22,6 +22,7 @@ This repository contains a small demo of an Agentic conversational personal-loan
 - `data.py` — Mock customer data (pre-approved customers). See phone keys such as `9876543210` and `9999999999`.
 - `static/index.html` — Frontend chat UI. Requests server greeting on load and keeps a session id for conversation continuity.
 - `requirements.txt` — `fastapi`, `uvicorn`, `reportlab`.
+- `requirements.txt` — `fastapi`, `uvicorn`, `reportlab`, `openai` (optional for LLM-enabled post-flow chat).
 
 ---
 
@@ -62,6 +63,10 @@ python -m uvicorn main:app --reload --port 8000
 ```
 http://127.0.0.1:8000/
 ```
+
+LLM & persisted demo data
+- To enable the optional OpenAI-based post-flow chat, copy `.env.template` to `.env` and set `OPENAI_API_KEY=sk-...`.
+- Demo persistence: this project may create `guests.json` and `customers.json` and a `generated/` folder for sanction PDFs. These files are intended for local testing only and are ignored by `.gitignore`.
 
 Testing notes
 - Pre-seeded customers exist in `data.py`. Use phone `9876543210` for a customer with good credit.
