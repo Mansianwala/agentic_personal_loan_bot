@@ -78,5 +78,3 @@ License & attribution
 - This is a small demo created as an exercise. No license file is included; add one if needed.
 
 ---
-
-If you'd like, I can also produce a polished PDF version of this README, persist guest profiles to a JSON file, or add a more detailed EMI breakdown when the user asks "why". Which would you prefer next?
