@@ -79,5 +79,20 @@ Limitations & next steps
 - Persist guest profiles to `guests.json` or a simple DB if you want guest accounts to be re-usable.
 - Improve UI/UX: show sanction PDF link after approval, add file download, progress indicators, and conversational tone.
 
+PowerShell notes
+- If you're using PowerShell, use the call operator `&` when invoking a quoted python executable path. Example (venv):
+```powershell
+& "C:\Users\mansi choudhary\Desktop\agentic_personal_loan_bot\.venv\Scripts\python.exe" -m uvicorn main:app --reload --port 8000
+```
+- To run the server in the background from PowerShell use `Start-Process`:
+```powershell
+Start-Process -FilePath "C:\Users\mansi choudhary\Desktop\agentic_personal_loan_bot\.venv\Scripts\python.exe" -ArgumentList '-m','uvicorn','main:app','--port','8000' -NoNewWindow -PassThru
+```
+- To smoke-test the `/chat` endpoint from PowerShell:
+```powershell
+$body = @{ message = 'hello'; session_id = 'test-session-1' } | ConvertTo-Json
+Invoke-RestMethod -Uri http://127.0.0.1:8000/chat -Method POST -ContentType 'application/json' -Body $body
+```
+
 
 ---
