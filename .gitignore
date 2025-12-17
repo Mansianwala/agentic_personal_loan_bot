@@ -13,3 +13,11 @@ venv/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Persisted demo data
+guests.json
+customers.json
+generated/
+
+# Local env files
+.env
