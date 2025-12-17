@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from agents import master_agent
 from typing import Optional
 
 app = FastAPI()
+
+# mount generated files (sanction PDFs) so the frontend can download them
+app.mount("/generated", StaticFiles(directory="generated"), name="generated")
 
 # sessions keyed by session_id (simple in-memory store for demo)
 SESSIONS = {}

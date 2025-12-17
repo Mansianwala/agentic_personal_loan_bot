@@ -123,7 +123,12 @@
 <script>
 const chatBody = document.getElementById("chatBody");
 const input = document.getElementById("msgInput");
+// Generate a new session id for each page load so reloads start fresh conversations
 let SESSION_ID = null;
+
+function makeSessionId() {
+    return 'sess-' + Date.now() + '-' + Math.random().toString(36).slice(2,9);
+}
 
 function addMessage(text, sender) {
     const msg = document.createElement("div");
@@ -190,13 +195,17 @@ function sendMessage() {
 
 // Request initial greeting from server and obtain a session id
 window.onload = () => {
+    // create a fresh session id for this page load
+    SESSION_ID = makeSessionId();
+
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "" })
+        body: JSON.stringify({ message: "", session_id: SESSION_ID })
     })
     .then(res => res.json())
     .then(data => {
+        // server may echo back the session_id; keep ours if it does
         if (data.session_id) SESSION_ID = data.session_id;
         addMessage(data.reply, "bot");
     });

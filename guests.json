@@ -4,5 +4,47 @@
     "salary": 600000,
     "credit_score": 600,
     "preapproved_limit": 0
+  },
+  "guest-1765960154": {
+    "name": "Mansi Choudhary",
+    "salary": 150000,
+    "credit_score": 720,
+    "preapproved_limit": 0
+  },
+  "guest-1765960383": {
+    "name": "Mansi Choudhary",
+    "salary": 150000,
+    "credit_score": 730,
+    "preapproved_limit": 0
+  },
+  "guest-1765960516": {
+    "name": "Mansi Choudhary",
+    "salary": 150000,
+    "credit_score": 750,
+    "preapproved_limit": 0
+  },
+  "guest-1765961010": {
+    "name": "Mansi Choudhary",
+    "salary": 30000,
+    "credit_score": 720,
+    "preapproved_limit": 180000
+  },
+  "guest-1765961563": {
+    "name": "Mansi Choudhary",
+    "salary": 50000,
+    "credit_score": 720,
+    "preapproved_limit": 300000,
+    "created_at": "2025-12-17T14:22:43.049030Z",
+    "approved": true,
+    "associated_phone": null
+  },
+  "guest-1765965429": {
+    "name": "Mansi Choudhary",
+    "salary": 150000,
+    "credit_score": 780,
+    "preapproved_limit": 900000,
+    "created_at": "2025-12-17T15:27:09.417112Z",
+    "approved": true,
+    "associated_phone": null
   }
 }
