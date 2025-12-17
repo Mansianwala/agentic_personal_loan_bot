@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AI Personal Loan Assistant</title>
+
+<style>
+    :root{--accent:#075e54;--bg:#e5ddd5}
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .chat-container {
+        width: 100%;
+        max-width: 720px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        height: 90vh;
+    }
+
+    .chat-header {
+        background: #075e54;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .chat-body {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background: var(--bg);
+    }
+
+    .message {
+        max-width: 78%;
+        padding: 12px 14px;
+        margin: 8px 0;
+        border-radius: 12px;
+        line-height: 1.4;
+        font-size: 15px;
+        clear: both;
+        word-break: break-word;
+    }
+
+    .bot {
+        background: #ffffff;
+        float: left;
+        border-top-left-radius: 0;
+    }
+
+    .user {
+        background: #dcf8c6;
+        float: right;
+        border-top-right-radius: 0;
+    }
+
+    .chat-footer {
+        display: flex;
+        padding: 12px;
+        background: #fafafa;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .chat-footer input {
+        flex: 1;
+        padding: 12px 14px;
+        font-size: 15px;
+        border-radius: 24px;
+        border: 1px solid #ddd;
+        outline: none;
+    }
+
+    .chat-footer button {
+        padding: 10px 16px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        min-width: 72px;
+    }
+
+    .chat-footer button:hover { background: #0b7a65; }
+
+    @media (max-width: 480px){
+        .chat-container{ height: 100vh; border-radius: 0 }
+        .message{ font-size: 14px }
+        .chat-header{ padding: 12px; font-size: 18px }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        AI Personal Loan Assistant
+    </div>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="chat-footer">
+        <input id="msgInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+const chatBody = document.getElementById("chatBody");
+const input = document.getElementById("msgInput");
+let SESSION_ID = null;
+
+function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = "message " + sender;
+    msg.innerText = text;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    const payload = { message: text };
+    if (SESSION_ID) payload.session_id = SESSION_ID;
+
+    fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        // store returned session_id for subsequent messages
+        if (data.session_id) SESSION_ID = data.session_id;
+
+        // show bot reply
+        setTimeout(() => addMessage(data.reply, "bot"), 300);
+
+        // if server returned a file path, render a download link
+        if (data.file) {
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = '/' + data.file;
+                link.innerText = 'Download sanction letter';
+                link.target = '_blank';
+                const wrapper = document.createElement('div');
+                wrapper.className = 'message bot';
+                wrapper.style.padding = '8px 12px';
+                wrapper.appendChild(link);
+                chatBody.appendChild(wrapper);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 350);
+        }
+
+        // If details are available, show a formatted breakdown when the message includes them
+        if (data.last_details) {
+            const d = data.last_details;
+            const parts = [];
+            if (d.emi) parts.push(`Estimated EMI (monthly): ₹${Math.round(d.emi).toLocaleString()}`);
+            if (d.salary) parts.push(`Monthly salary: ₹${d.salary.toLocaleString()}`);
+            if (d.preapproved_limit) parts.push(`Pre-approved limit: ₹${d.preapproved_limit.toLocaleString()}`);
+            if (d.max_allowed) parts.push(`Max allowed (2x): ₹${d.max_allowed.toLocaleString()}`);
+
+            if (parts.length) {
+                setTimeout(() => addMessage(parts.join('\n'), 'bot'), 400);
+            }
+        }
+    });
+}
+
+// Request initial greeting from server and obtain a session id
+window.onload = () => {
+    fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "" })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.session_id) SESSION_ID = data.session_id;
+        addMessage(data.reply, "bot");
+    });
+};
+</script>
+
+</body>
+</html>
